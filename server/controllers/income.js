@@ -2,19 +2,20 @@ const IncomeSchema= require("../models/IncomeModel")
 
 
 exports.addIncome = async (req, res) => {
-    const {title, amount, category, description, date}  = req.body
+    const {title, amount, category, description, date, userId}  = req.body
 
     const income = IncomeSchema({
         title,
         amount,
         category,
         description,
-        date
+        date,
+        userId
     })
 
     try {
         //validations
-        if(!title || !category || !description || !date){
+        if(!title || !category || !description || !date || !userId){
             return res.status(400).json({message: 'All fields are required!'})
         }
         if(amount <= 0 || !amount === 'number'){
@@ -38,6 +39,16 @@ exports.getIncomes = async (req, res) =>{
     }
 }
 
+exports.getIncomeById = async (req, res) =>{
+    const {id} = req.params;
+    try {
+        const incomeById = await IncomeSchema.findById(id)
+        res.status(200).json(incomeById)
+    } catch (error) {
+        res.status(500).json({message: 'Server Error'})
+    }
+}
+
 exports.deleteIncome = async (req, res) =>{
     const {id} = req.params;
     IncomeSchema.findByIdAndDelete(id)
@@ -47,4 +58,16 @@ exports.deleteIncome = async (req, res) =>{
         .catch((err) =>{
             res.status(500).json({message: 'Server Error'})
         })
+}
+
+exports.updateIncome = async (req, res) =>{
+    const {id} = req.params;
+    IncomeSchema.findByIdAndUpdate(id,{$set:req.body},{new: true})
+        .then((income) =>{
+            res.status(200).json({message: 'Income Updated'})
+        })
+        .catch((err) =>{
+            res.status(500).json({message: 'Server Error'})
+        })
+
 }
