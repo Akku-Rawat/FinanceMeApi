@@ -6,12 +6,12 @@ const ExpenseSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        maxLength: 50
+        maxLength: 12
     },
     amount: {
         type: Number,
         required: true,
-        maxLength: 20,
+        maxLength: 9,
         trim: true
     },
     type: {
@@ -31,7 +31,7 @@ const ExpenseSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
-        maxLength: 20,
+        maxLength: 16,
         trim: true
     },
     userId:{
